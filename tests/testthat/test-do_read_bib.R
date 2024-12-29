@@ -37,3 +37,25 @@ test_that("do read with several entries", {
 
   expect_snapshot_output(lapply(out, print))
 })
+
+
+test_that("make.bib.entry can handle year-month pairs (#56)", {
+  j <- c(author = "Thor, Adrij Udaya", date = "2011-05",  # date: YYYY-MM
+         journal = "Applied Baphometrics",
+         title = "Robust VCOV estimators: A survey",
+         number = "4", pages = "13--64", volume = "26")
+  attributes(j) <- c(attributes(j), list(entry = "Article", key = "author2011"))
+  out <- make.bib.entry(j)
+  expect_equal(out$year, "2011")
+})
+
+
+test_that("make.bib.entry can handle 'journaltitle' without 'journal' (#57)", {
+  j <- c(author =  "Thor, Adrij Udaya", year = "2011",
+         journaltitle = "Applied Baphometrics",  # not 'journal'
+         title = "Robust VCOV estimators: A survey",
+         number = "4", pages = "13--64", volume = "26")
+  attributes(j) <- c(attributes(j), list(entry = "Article", key = "author2011"))
+  out <- make.bib.entry(j)
+  expect_equal(out$year, "2011")
+})
